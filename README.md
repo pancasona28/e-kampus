@@ -38,5 +38,5 @@ _Proyek ini masih dalam tahap pengembangan struktur database. Langkah instalasi 
 
 1. Clone repository:
     ```bash
-    git clone [https://github.com/username/project-name.git](https://github.com/username/project-name.git)
+    <!-- git clone [https://github.com/pancasona28/e-kampus.git](https://github.com/pancasona28/e-kampus.git) -->
     ```
