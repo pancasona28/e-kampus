@@ -40,7 +40,8 @@ class User extends Authenticatable implements FilamentUser {
 
     public function canAccessPanel(Panel $panel): bool {
         // Izinkan login jika kolom role di database adalah 'admin'
-        return $this->role === 'admin';
+        // return $this->role === 'admin';
+        return true;
     }
     /**
      * The attributes that should be hidden for serialization.
@@ -66,5 +67,17 @@ class User extends Authenticatable implements FilamentUser {
 
     public function courses(): HasMany {
         return $this->hasMany(Course::class, 'lecturer_id');
+    }
+    protected static function booted(): void {
+        static::saved(function ($user) {
+
+            if ($user->role === 'admin') {
+                $user->syncRoles(['super_admin']);
+            } elseif ($user->role === 'dosen') {
+                $user->syncRoles(['dosen']);
+            } elseif ($user->role === 'mahasiswa') {
+                $user->syncRoles(['mahasiswa']);
+            }
+        });
     }
 }
