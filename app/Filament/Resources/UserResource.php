@@ -6,6 +6,7 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -28,6 +29,7 @@ class UserResource extends Resource {
                     ->password()
                     ->dehydrateStateUsing(fn($state) => Hash::make($state))
                     ->required(fn(string $context): bool => $context === 'create'),
+                Forms\Components\TextInput::make('nik')->label('NIK'),
                 Forms\Components\TextInput::make('nip')->label('NIP (Dosen)'),
                 Forms\Components\TextInput::make('nim')->label('NIM (Mahasiswa)'),
                 Forms\Components\Select::make('role')
@@ -40,7 +42,13 @@ class UserResource extends Resource {
                     ->options([
                         'Laki-laki' => 'Laki-laki',
                         'Perempuan' => 'Perempuan',
-                    ]),
+                    ])->required(),
+                Forms\Components\DatePicker::make('tanggal_lahir')->label('Tanggal Lahir')
+                    ->required(),
+                Forms\Components\TextInput::make('tempat_lahir')->label('Tempat Lahir')->required(),
+                Forms\Components\TextInput::make('alamat')->required(),
+                Forms\Components\TextInput::make('no_hp')->label('No. HP')->numeric()->required(),
+                Forms\Components\Toggle::make('is_active')->label('Aktif')->default(true),
             ]);
     }
 
@@ -51,6 +59,7 @@ class UserResource extends Resource {
                 Tables\Columns\TextColumn::make('email')->searchable(),
                 Tables\Columns\TextColumn::make('role')->label('Status'),
                 Tables\Columns\TextColumn::make('nik')->label('NIK'),
+                Tables\Columns\TextColumn::make('nip')->label('NIP'),
                 Tables\Columns\TextColumn::make('nim')->label('NIM'),
                 Tables\Columns\TextColumn::make('jenis_kelamin')->label('Jenis Kelamin'),
                 Tables\Columns\TextColumn::make('is_active')->label('Status Aktif')->formatStateUsing(fn($state) => $state ? 'Aktif' : 'Tidak Aktif'),
@@ -61,6 +70,7 @@ class UserResource extends Resource {
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
