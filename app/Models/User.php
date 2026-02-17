@@ -7,12 +7,13 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements FilamentUser {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -39,7 +40,6 @@ class User extends Authenticatable implements FilamentUser {
     public function canAccessPanel(Panel $panel): bool {
         // Izinkan login jika kolom role di database adalah 'admin'
         return $this->role === 'admin';
-        
     }
     /**
      * The attributes that should be hidden for serialization.
