@@ -6,7 +6,9 @@ use App\Filament\Resources\AssignmentResource\Pages;
 use App\Filament\Resources\AssignmentResource\RelationManagers;
 use App\Models\Assignment;
 use Filament\Forms;
+use Filament\Forms\Components\ViewField;
 use Filament\Forms\Form;
+use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -125,5 +127,18 @@ class AssignmentResource extends Resource {
             'view' => Pages\ViewAssignment::route('/{record}'),
             'edit' => Pages\EditAssignment::route('/{record}/edit'),
         ];
+    }
+    public static function infolist(Infolist $infolist): Infolist {
+        return $infolist
+            ->schema([
+                // ... komponen informasi lainnya ...
+
+                \Filament\Infolists\Components\Section::make('Ruang Diskusi')
+                    ->schema([
+                        ViewField::make('forum_diskusi')
+                            ->view('filament.components.forum-wrapper')
+                            ->columnSpanFull(),
+                    ])
+            ]);
     }
 }

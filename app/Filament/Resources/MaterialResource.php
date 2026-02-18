@@ -15,6 +15,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class MaterialResource extends Resource {
@@ -123,6 +124,7 @@ class MaterialResource extends Resource {
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
                 Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\ViewAction::make()->label('Forum Diskusi'),
             ])
 
             ->bulkActions([
@@ -163,6 +165,7 @@ class MaterialResource extends Resource {
             'index' => Pages\ListMaterials::route('/'),
             'create' => Pages\CreateMaterial::route('/create'),
             'edit' => Pages\EditMaterial::route('/{record}/edit'),
+            'view' => Pages\ViewMaterial::route('/{record}'),
         ];
     }
 }
