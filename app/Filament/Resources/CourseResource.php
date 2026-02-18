@@ -52,7 +52,7 @@ class CourseResource extends Resource {
                 Tables\Columns\TextColumn::make('name')->searchable(),
                 Tables\Columns\TextColumn::make('lecturer.name')->label('Dosen'),
                 TextColumn::make('kode_matkul')->label('Kode Mata Kuliah'),
-                Tables\Columns\TextColumn::make('created_at')->dateTime(),
+                Tables\Columns\TextColumn::make('created_at')->date(),
             ])
             ->filters([
                 TrashedFilter::make(),
