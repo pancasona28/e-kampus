@@ -85,7 +85,7 @@ class User extends Authenticatable implements FilamentUser {
 
     public function course_student(): BelongsToMany {
         // Asumsi tabel pivot bernama course_student
-        return $this->belongsToMany(course_students::class, 'course_student', 'user_id', 'course_id')
+        return $this->belongsToMany(course_students::class, 'course_students', 'student_id', 'course_id')
             ->withTimestamps();
     }
 }

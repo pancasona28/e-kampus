@@ -29,11 +29,12 @@ class MaterialResource extends Resource {
         return $form
             ->schema([
                 Forms\Components\Select::make('course_id')
-                    ->relationship('course', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->required()
-                    ->label('Mata Kuliah'),
+                    ->relationship('course', 'name', function (Builder $query) {
+                        if (auth()->user()->hasRole('dosen')) {
+                            return $query->where('lecturer_id', auth()->id());
+                        }
+                    })
+                    ->required(),
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->unique(ignoreRecord: true)
@@ -129,6 +130,26 @@ class MaterialResource extends Resource {
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getEloquentQuery(): Builder {
+        $user = auth()->user();
+
+        if ($user->hasRole('super_admin')) {
+            return parent::getEloquentQuery();
+        }
+
+        if ($user->hasRole('dosen')) {
+            return parent::getEloquentQuery()
+                ->whereHas('course', function ($query) use ($user) {
+                    $query->where('lecturer_id', $user->id);
+                });
+        }
+
+        return parent::getEloquentQuery()
+            ->whereHas('course.students', function ($query) use ($user) {
+                $query->where('course_students.student_id', $user->id);
+            });
     }
 
     public static function getRelations(): array {

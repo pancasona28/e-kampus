@@ -49,12 +49,12 @@ class MyCourseResource extends Resource {
         return Select::make('course_id')
             ->label('Pilih Mata Kuliah')
             ->options(function () {
-                // 1. Ambil semua ID mata kuliah yang sudah diambil oleh user ini
+                // Ambil semua ID mata kuliah yang sudah diambil oleh user ini
                 $alreadyTakenIds = DB::table('course_students')
                     ->where('student_id', Auth::id())
                     ->pluck('course_id');
 
-                // 2. Tampilkan mata kuliah yang ID-nya TIDAK ada dalam daftar di atas
+                // ampilkan mata kuliah yang ID-nya TIDAK ada dalam daftar di atas
                 return Course::whereNotIn('id', $alreadyTakenIds)
                     ->pluck('name', 'id');
             })
@@ -73,10 +73,10 @@ class MyCourseResource extends Resource {
                 Tables\Columns\TextColumn::make('course.name')->label('Nama Mata Kuliah')->searchable(),
                 Tables\Columns\TextColumn::make('course.lecturer.name')->label('Dosen Pengampu')->searchable(),
                 Tables\Columns\TextColumn::make('course.kode_matkul')->label('Kode Mata Kuliah')->searchable(),
-                Tables\Columns\TextColumn::make('created_at')->date(),                
+                Tables\Columns\TextColumn::make('created_at')->date(),
             ])
             ->filters([
-                 TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
