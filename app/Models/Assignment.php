@@ -20,6 +20,10 @@ class Assignment extends Model {
         return $this->belongsTo(Course::class);
     }
 
+    public function submissions() {
+        return $this->hasMany(Submission::class);
+    }
+
     protected static function booted() {
         static::created(function ($assignment) {
             // 1. Ambil daftar mahasiswa yang mengambil mata kuliah ini

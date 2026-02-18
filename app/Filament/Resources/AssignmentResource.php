@@ -7,6 +7,7 @@ use App\Filament\Resources\AssignmentResource\RelationManagers;
 use App\Models\Assignment;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Filters\TrashedFilter;
@@ -46,6 +47,7 @@ class AssignmentResource extends Resource {
 
     public static function table(Table $table): Table {
         return $table
+
             ->columns([
                 Tables\Columns\TextColumn::make('course.name')->label('Mata Kuliah'),
                 Tables\Columns\TextColumn::make('title')->searchable(),
@@ -57,10 +59,51 @@ class AssignmentResource extends Resource {
                 TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make()
+                    ->label('Periksa Tugas'),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
                 Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\Action::make('kumpul_tugas')
+                    ->label('Kumpulkan Tugas')
+                    ->visible(function ($record) {
+                        $user = auth()->user();
+
+                        // 1. Hanya muncul untuk mahasiswa
+                        if (!$user->hasRole('mahasiswa')) {
+                            return false;
+                        }
+
+                        // 2. Sembunyikan jika mahasiswa ini SUDAH mengumpulkan tugas (ada di tabel submissions)
+                        // $record di sini adalah model Assignment
+                        $sudahKumpul = $record->submissions()
+                            ->where('student_id', $user->id)
+                            ->exists();
+
+                        $isExpired = \Carbon\Carbon::parse($record->deadline)->isPast();
+                        return !$sudahKumpul && !$isExpired;
+                    })
+                    ->form([
+                        Forms\Components\FileUpload::make('file_path')
+                            ->directory('submissions')
+                            ->required(),
+                    ])
+                    ->icon('heroicon-o-cloud-arrow-up')
+                    ->action(function ($record, array $data) {
+                        // $record di sini adalah Assignment (Tugas)
+                        // $data adalah hasil input dari form di atas
+
+                        $record->submissions()->create([
+                            'student_id' => auth()->id(),
+                            'file_path' => $data['file_path'], // Pastikan mengambil dari $data
+                        ]);
+
+                        \Filament\Notifications\Notification::make()
+                            ->title('Tugas Berhasil Dikirim')
+                            ->success()
+                            ->send();
+                    })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -71,7 +114,7 @@ class AssignmentResource extends Resource {
 
     public static function getRelations(): array {
         return [
-            //
+            RelationManagers\SubmissionsRelationManager::class,
         ];
     }
 
@@ -79,6 +122,7 @@ class AssignmentResource extends Resource {
         return [
             'index' => Pages\ListAssignments::route('/'),
             'create' => Pages\CreateAssignment::route('/create'),
+            'view' => Pages\ViewAssignment::route('/{record}'),
             'edit' => Pages\EditAssignment::route('/{record}/edit'),
         ];
     }
