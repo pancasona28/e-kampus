@@ -6,6 +6,7 @@ namespace App\Models;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -65,7 +66,7 @@ class User extends Authenticatable implements FilamentUser {
             'password' => 'hashed',
         ];
     }
-
+    
     public function courses(): HasMany {
         return $this->hasMany(Course::class, 'lecturer_id');
     }
@@ -80,5 +81,11 @@ class User extends Authenticatable implements FilamentUser {
                 $user->syncRoles(['mahasiswa']);
             }
         });
+    }
+
+    public function course_student(): BelongsToMany {
+        // Asumsi tabel pivot bernama course_student
+        return $this->belongsToMany(course_students::class, 'course_student', 'user_id', 'course_id')
+            ->withTimestamps();
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Course extends Model {
@@ -26,5 +27,14 @@ class Course extends Model {
 
     public function assignments() {
         return $this->hasMany(Assignment::class);
+    }
+
+    public function students(): BelongsToMany {
+        return $this->belongsToMany(User::class, 'course_student', 'course_id', 'user_id')
+            ->withTimestamps();
+    }
+
+    public function isTakenByStudent($studentId) {
+        return $this->students()->where('user_id', $studentId)->exists();
     }
 }
