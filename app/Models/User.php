@@ -66,7 +66,11 @@ class User extends Authenticatable implements FilamentUser {
             'password' => 'hashed',
         ];
     }
-    
+
+    public function submissions(): \Illuminate\Database\Eloquent\Relations\HasMany {
+        return $this->hasMany(\App\Models\Submission::class, 'student_id');
+    }
+
     public function courses(): HasMany {
         return $this->hasMany(Course::class, 'lecturer_id');
     }

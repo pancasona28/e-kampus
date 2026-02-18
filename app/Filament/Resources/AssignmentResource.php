@@ -70,12 +70,12 @@ class AssignmentResource extends Resource {
                     ->visible(function ($record) {
                         $user = auth()->user();
 
-                        // 1. Hanya muncul untuk mahasiswa
+                        // Hanya muncul untuk mahasiswa
                         if (!$user->hasRole('mahasiswa')) {
                             return false;
                         }
 
-                        // 2. Sembunyikan jika mahasiswa ini SUDAH mengumpulkan tugas (ada di tabel submissions)
+                        // Sembunyikan jika mahasiswa ini SUDAH mengumpulkan tugas (ada di tabel submissions)
                         // $record di sini adalah model Assignment
                         $sudahKumpul = $record->submissions()
                             ->where('student_id', $user->id)
