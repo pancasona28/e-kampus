@@ -1,4 +1,4 @@
-# E-Learning Kampus - Laravel & Filament Stack
+u# E-Learning Kampus - Laravel & Filament Stack
 
 Sistem Informasi Manajemen Pembelajaran (E-Learning) Kampus yang dibangun menggunakan Laravel 11, Filament PHP (Admin Panel), dan Laravel Sanctum untuk autentikasi API. Proyek ini dirancang untuk memfasilitasi interaksi antara Dosen dan Mahasiswa dalam manajemen perkuliahan, tugas, dan forum diskusi real-time.
 
@@ -129,7 +129,7 @@ Jika Anda melakukan migrasi atau instalasi di lingkungan baru, pastikan menjalan
 php artisan optimize
 php artisan migrate
 
-jalankan npm run juga
+jalankan npm run, php artisan reverb:start
 
 _Proyek ini masih dalam tahap pengembangan struktur database. Langkah instalasi akan diperbarui setelah integrasi Filament dan Sanctum selesai._
 
