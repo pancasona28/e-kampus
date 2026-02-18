@@ -129,6 +129,8 @@ Jika Anda melakukan migrasi atau instalasi di lingkungan baru, pastikan menjalan
 php artisan optimize
 php artisan migrate
 
+jalankan npm run juga
+
 _Proyek ini masih dalam tahap pengembangan struktur database. Langkah instalasi akan diperbarui setelah integrasi Filament dan Sanctum selesai._
 
 1. Clone repository:
